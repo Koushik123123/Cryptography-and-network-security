@@ -1,40 +1,56 @@
-#include <stdio.h>
+Caesar cipher
+#include<stdio.h>
+#include<string.h>
 #include<ctype.h>
-
-int main(){
-    char c[100],ch;
-    int key;
-    printf("enter the string: ");
-    fgets(c, sizeof(c), stdin);
-    printf("enter the key :");
-    scanf("%d", &key);
-    for (int i = 0; c[i] != '\0'; ++i) {
-        ch = c[i];
-        if (isalnum(ch)) {
-            if (islower(ch)) {
-                ch = (ch - 'a' + key) % 26 + 'a';
+void encrypt(char text[],int k)
+{
+    for(int i=0;text[i]!='\0';i++)
+    {
+        char ch=text[i];
+        if(isalnum(ch))
+        {
+            if(islower(ch))
+            {
+                ch=(ch - 'a' + k)%26 +'a';
             }
-            if (isupper(ch)) {
-                ch = (ch - 'A' + key) % 26 + 'A';
+            if(isupper(ch))
+            {
+                ch=(ch - 'A' + k)%26 +'A';
             }
         }
-          c[i] = ch;
+        text[i]=ch;
     }
-    printf("Encrypted message: %s", c);
-    for (int i = 0; c[i] != '\0'; ++i) {
-        ch = c[i];
-        if (isalnum(ch)) {
-            if (islower(ch)) {
-                ch = (ch - 'a' -key +26) % 26 + 'a';
+}
+void decrypt(char text[],int k)
+{
+    for(int i=0;text[i]!='\0';i++)
+    {
+        char ch=text[i];
+        if(isalnum(ch))
+        {
+            if(islower(ch))
+            {
+                ch=(ch - 'a' - k + 26)%26 +'a';
             }
-            if (isupper(ch)) {
-                ch = (ch - 'A' - key +26) % 26 + 'A';
+            if(isupper(ch))
+            {
+                ch=(ch - 'A' - k + 26)%26 +'A';
             }
         }
-          c[i] = ch;
+        text[i]=ch;
     }
-    printf("Decrypted  message: %s", c);
-    
-    
+}
+int main()
+{
+    int k;
+    char text[100];
+    printf("Enter the Plaintext:\n");
+    fgets(text,sizeof(text),stdin);
+    printf("Enter the Key:\n");
+    scanf("%d",&k);
+    encrypt(text,k);
+    printf("Cipher text : %s\n",text);
+    decrypt(text,k);
+    printf("Plain text : %s\n",text);
     return 0;
 }
