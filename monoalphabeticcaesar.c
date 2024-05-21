@@ -1,67 +1,66 @@
 #include<stdio.h>
 #include<string.h>
-#define ALPHABET_SIZE 26
-char encrypt(char ch,char key[])
+#include<ctype.h>
+char encryptchar(char c,char key[])
 {
-	if(ch>='A' && ch<='Z')
-	{
-		return key[ch-'A'];
-	}
-	else if(ch>='a' && ch<='z')
-	{
-		return key[ch-'a']+('a'-'A');
-	}
-	else 
-	{
-		return ch;
-	}
+    if(isalpha(c))
+    {
+        if(islower(c))
+        {
+            return tolower(key[c - 'a']);
+        }
+        else 
+        {
+            return toupper(key[c - 'A']);
+        }
+    }
+    return c;
 }
-char decrypt(char ch,char key[])
+char decryptchar(char c,char key[])
 {
-	for(int i=0;i<26;i++)
-	{
-		if(ch==key[i])
-		{
-			return 'A'+i;
-		}
-		else if(ch==(key[i]+('a'-'A')))
-		{
-			return 'a'+i;
-		}
-	}
-	return ch;
+    for(int i=0;i<26;i++)
+    {
+        if(tolower(c)==tolower(key[i]))
+        {
+            if(islower(c))
+            {
+                return 'a'+ i;
+            }
+            else 
+            {
+                return 'A'+ i;
+            }
+        }
+    }
+    return c;
 }
-void encryptMessage(char plaintext[],char key[],char ciphertext[])
+void encrypt(char plaintext[],char key[])
 {
-	int i;
-	for(i=0;plaintext[i]!='\0';i++) 
-	{
-		ciphertext[i]=encrypt(plaintext[i],key);
-	}
-	ciphertext[i]='\0';
+    for(int i=0;i<strlen(plaintext);i++)
+    {
+        plaintext[i]=encryptchar(plaintext[i],key);
+    }
 }
-void decryptMessage(char ciphertext[],char key[],char plaintext[])
+void decrypt(char ciphertext[],char key[])
 {
-	int i;
-	for(i=0;ciphertext[i]!='\0';i++) 
-	{
-		plaintext[i]=decrypt(ciphertext[i],key);
-	}
-	plaintext[i]='\0';
+    for(int i=0;i<strlen(ciphertext);i++)
+    {
+        ciphertext[i]=decryptchar(ciphertext[i],key);
+    }
 }
-int main() 
+int main()
 {
-	char plaintext[100];
-	char key[100];
-	char ciphertext[100];
-	char decryptedtext[100];
-	printf("Enter plaintext:\n");
-	fgets(plaintext, sizeof(plaintext), stdin);
-	printf("Enter key:\n");
-	scanf("%s",key);
-	encryptMessage(plaintext,key,ciphertext);
-	printf("Encrypted text: %s\n",ciphertext);
-	decryptMessage(ciphertext,key,decryptedtext);
-	printf("Decrypted text: %s\n",decryptedtext);
-	return 0;
+    char key[27];
+    char plaintext[100];
+    printf("Enter the plaintext: \n");
+    fgets(plaintext,sizeof(plaintext),stdin);
+    printf("Enter the key: \n");
+    fgets(key,sizeof(key),stdin);
+    char ciphertext[strlen(plaintext)];
+    strcpy(ciphertext,plaintext);
+    encrypt(ciphertext,key);
+    printf("Encrypted text: %s\n",ciphertext);
+    decrypt(ciphertext,key);
+    printf("Decrypted text: %s \n",ciphertext);
+    return 0;
 }
